@@ -4,14 +4,14 @@ def get_sql_tool(database_schema_string: str, database_definitions: str) -> list
             "type": "function",
             "function": {
                 "name": "ask_database",
-                "description": "Use this function to answer user questions about real estate. Input should be a fully formed SQL query.",
+                "description": "Use this function to answer user questions about Production data. Input should be a fully formed MySQL query.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "query": {
                             "type": "string",
-                            "description": f"""SQL query extracting info to answer the user's question. \
-SQL should be written using this database schema: \
+                            "description": f"""MySQL query extracting info to answer the user's question. \
+MySQL should be written using this database schema: \
 {database_schema_string} \
 The query should be returned in plain text, not in JSON. \
 Don't use DATEPART function for any date related queries. \
@@ -41,8 +41,8 @@ def get_format_sql_response_messages(sql_response: str) -> list[dict]:
     formatted_sql_response_messages = [
         {"role": "system", "content": "Consider yourselk as a helpful data analyst. \
 You help user get information about the data and answer their question."},
-        {"role": "user", "content": f"""Convert the following SQL data into natural language conversation, \
-keep the response short and concise and never mention id of the SQL data. \
+        {"role": "user", "content": f"""Convert the following MySQL data into natural language conversation, \
+keep the response short and concise and never mention id of the MySQL data. \
 SQL data: {sql_response}"""}
     ]
 

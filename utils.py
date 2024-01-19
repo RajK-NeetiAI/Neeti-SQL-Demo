@@ -1,3 +1,4 @@
+import decimal
 import json
 import datetime
 
@@ -63,11 +64,25 @@ with open('data_definations.json', 'r') as file:
     database_definitions = json.loads(file.read())
 
 
-def serialize_datetime(obj: datetime.datetime) -> str:
-    if isinstance(obj, datetime.datetime):
+def format_number(amount):
+    def truncate_float(number, places):
+        return int(number * (10 ** places)) / 10 ** places
+    if amount < 1e3:
+        return amount
+    if 1e3 <= amount < 1e5:
+        return str(truncate_float((amount / 1e5) * 100, 2)) + " K"
+    if 1e5 <= amount < 1e7:
+        return str(truncate_float((amount / 1e7) * 100, 2)) + " L"
+    if amount > 1e7:
+        return str(truncate_float(amount / 1e7, 2)) + " Cr"
 
+
+def serialize_data(obj) -> str:
+    if isinstance(obj, datetime.datetime):
         return obj.isoformat()
-    raise TypeError("Type not serializable")
+    if isinstance(obj, decimal.Decimal):
+        return format_number(float(obj))
+    raise TypeError(f"Object type not serializable - {type(obj)}")
 
 
 def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
@@ -78,10 +93,11 @@ def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
         results = ''
         for data in cursor:
             print(data)
-            results += json.dumps(data, default=serialize_datetime)
+            results += json.dumps(data, default=serialize_data)
     except Exception as e:
-        print(f'SQL Error - {e}')
-        results = ''
+        print(e.args[0])
+    else:
+        pass
 
     return results
 
