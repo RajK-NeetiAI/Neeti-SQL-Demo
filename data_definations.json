@@ -1,0 +1,280 @@
+{
+  "tables": [
+    {
+      "name": "brs_production_report",
+      "description": "This table stores detailed information about different parameters of BRS production.",
+      "columns": [
+        {
+          "name": "Added_User",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Added_Time",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Date",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Select_Shift",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Select_Plant",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Bittern_GPL",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Be",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Ca2",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "pH",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Bittern_Temp",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "CL2_Cons__Moss_Flow_KG",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "Sulpher_KG",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "SO2_KG",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "Lime_KG",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "Wash_water_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Brine_Water_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "RWSW__Feed_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Transfer_HPL_Volume_KL",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "HPL_Production_MT",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Castor_Oil_KG",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Mix_Acid_15_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Mix_Acid_55_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "33_ACID_KG",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Reject_water_WATBP01_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Steam_MT",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "CL2__Cons__Tonner_KG",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "Caustic_Lye_KG",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Bittern_Cons_M3",
+          "type": "bigint",
+          "description": ""
+        },
+        {
+          "name": "Effluent_GPL",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "HPL__HBr_SpGr",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "HPL_Base_Effe_",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "HPL__HBr_GPL",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Effluent_Loss_MT",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Bittern_Flow_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Eff_Base_Br2_Rec_MT",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Bittern_Br2_MT",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Eff_Base_Effe_",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Total_Water_Cons_M3",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Total_Running_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Total_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Tower_Wash_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Other_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Other_Shutdown_Reasons",
+          "type": "text",
+          "description": ""
+        },
+        {
+          "name": "Maintenance_Related_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Electrical_Related_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Instrument_Related_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Utility_Related_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Operational_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Planned_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "RM_Shortage_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Raw_water_Shortage_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Resources_Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Running_Hours",
+          "type": "double",
+          "description": ""
+        },
+        {
+          "name": "Shutdown_Hours",
+          "type": "double",
+          "description": ""
+        }
+      ]
+    }
+  ]
+}
