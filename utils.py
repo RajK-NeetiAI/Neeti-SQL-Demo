@@ -19,6 +19,7 @@ def get_table_names(cnx: mysql.connector.MySQLConnection) -> list[str]:
         if table[0] in config.MYSQL_TABLES:
             table_names.append(table[0])
     cursor.close()
+
     return table_names
 
 
@@ -31,6 +32,7 @@ def get_column_names(cnx: mysql.connector.MySQLConnection, table_name: str) -> l
     for col in cursor:
         column_names.append(col[0])
     cursor.close()
+
     return column_names
 
 
@@ -43,6 +45,7 @@ def get_database_info(cnx: mysql.connector.MySQLConnection) -> dict:
         table_dicts.append(
             {"table_name": table_name, "column_names": columns_names})
     cursor.close()
+
     return table_dicts
 
 
@@ -62,6 +65,7 @@ with open('data_definations.json', 'r') as file:
 
 def serialize_datetime(obj: datetime.datetime) -> str:
     if isinstance(obj, datetime.datetime):
+
         return obj.isoformat()
     raise TypeError("Type not serializable")
 
@@ -73,15 +77,17 @@ def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
         cursor.execute(query)
         results = ''
         for data in cursor:
+            print(data)
             results += json.dumps(data, default=serialize_datetime)
     except Exception as e:
-        results = f"query failed with error: {e}"
+        print(f'SQL Error - {e}')
+        results = ''
+
     return results
 
 
 def execute_function_call(query: str) -> str:
-    try:
-        results = ask_database(cnx, query)
-    except:
-        results = f"Error: Runnig databse query."
+    results = ask_database(cnx, query)
+    print(results)
+
     return results

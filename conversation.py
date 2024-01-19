@@ -2,39 +2,13 @@ import json
 
 from openai_api import chat_completion_request, format_sql_response
 from utils import database_schema_string, execute_function_call, database_definitions
+from prompts import get_sql_tool, get_chat_completion_prompt
 
-
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "ask_database",
-            "description": "Use this function to answer user questions about real estate. Input should be a fully formed SQL query.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": f"""SQL query extracting info to answer the user's question. \
-SQL should be written using this database schema: \
-{database_schema_string} \
-The query should be returned in plain text, not in JSON. \
-Use the date format dd-month-year, use three characters for the month name. \
-Don't assume any column names that are not in the database schema, use the \
-following data definitions instead: \
-{database_definitions}"""
-                    }
-                },
-                "required": ["query"],
-            },
-        }
-    }
-]
+sql_tool = get_sql_tool(database_schema_string, database_definitions)
 
 
 def format_chat_history(chat_history: list[list]) -> list[list]:
     formated_chat_history = []
-
     for ch in chat_history:
         formated_chat_history.append({
             'role': 'user',
@@ -52,15 +26,11 @@ def format_chat_history(chat_history: list[list]) -> list[list]:
 
 
 def handle_chat_completion(chat_history: list[list]) -> list[list]:
-
     query = chat_history[-1][0]
     print(f'User query -> {query}')
-
     formated_chat_history = format_chat_history(chat_history)
-
-    chat_response = chat_completion_request(formated_chat_history, tools)
+    chat_response = chat_completion_request(formated_chat_history, sql_tool)
     assistant_message = chat_response["choices"][0]['message']
-
     if assistant_message['content'] == None:
         '''Call SQL and generate the response.
         '''
@@ -71,17 +41,15 @@ def handle_chat_completion(chat_history: list[list]) -> list[list]:
             sql_response = execute_function_call(sql_query)
             print(f'SQL response -> {sql_response}')
         if sql_response == '':
-            response = get_openai_response(f'''You are a data analyst. A user has asked a \
-question: {query}, in the context of the following chat history: {formated_chat_history}, politely reply \
-you don't have the answer''')
+            chat_completion_prompt = get_chat_completion_prompt(
+                query, formated_chat_history)
+            response = get_openai_response(chat_completion_prompt)
         else:
             response = format_sql_response(sql_response)
             response = response["choices"][0]['message']['content']
     else:
         response = assistant_message['content']
-
     print(f'Agent response -> {response}')
-
     chat_history[-1][1] = response
 
     return chat_history

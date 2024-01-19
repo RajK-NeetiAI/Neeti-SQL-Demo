@@ -1,5 +1,6 @@
 import re
 import json
+from typing import Any
 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -16,6 +17,13 @@ def clean_column_names(column_name: str) -> str:
     cleaned_name = column_name.replace(' ', '_')
     cleaned_name = re.sub(r'[^\w_]', '', cleaned_name)
     return cleaned_name
+
+
+def convert_to_datetime(col: str) -> Any:
+    try:
+        return pd.to_datetime(col)
+    except ValueError:
+        return col
 
 
 def get_column_names(cnx: mysql.connector.MySQLConnection, table_name: str) -> list[str]:
@@ -45,9 +53,12 @@ print('Reading CSV file.')
 csv_file_path = 'BRS Production Report-3.csv'
 data = pd.read_csv(csv_file_path)
 
-print('Cleaning columns name.')
+print('Cleaning CSV data.')
 
 data.columns = [clean_column_names(col) for col in data.columns]
+
+for col in data.columns:
+    data[col] = convert_to_datetime(data[col])
 
 print('Creating table and pushing the data.')
 
