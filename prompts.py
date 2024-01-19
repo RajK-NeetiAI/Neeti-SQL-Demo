@@ -14,7 +14,6 @@ def get_sql_tool(database_schema_string: str, database_definitions: str) -> list
 MySQL should be written using this database schema: \
 {database_schema_string} \
 The query should be returned in plain text, not in JSON. \
-Don't use DATEPART function for any date related queries. \
 Don't assume any column names that are not in the database schema, use the \
 following data definitions instead: \
 {database_definitions}"""
