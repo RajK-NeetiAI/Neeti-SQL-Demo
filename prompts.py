@@ -38,7 +38,7 @@ that you don't have the answer for the question.'''
 
 def get_format_sql_response_messages(sql_response: str) -> list[dict]:
     formatted_sql_response_messages = [
-        {"role": "system", "content": "Consider yourselk as a helpful data analyst. \
+        {"role": "system", "content": "Consider yourself as a helpful data analyst. \
 You help user get information about the data and answer their question."},
         {"role": "user", "content": f"""Convert the following MySQL data into natural language conversation, \
 keep the response short and concise and never mention id of the MySQL data. \
