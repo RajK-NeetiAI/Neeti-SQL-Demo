@@ -212,67 +212,67 @@
         {
           "name": "Other_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is due to other reasons."
         },
         {
           "name": "Other_Shutdown_Reasons",
           "type": "text",
-          "description": ""
+          "description": "If there is a value in other than 0 in this column then it means that there was a shut down and it was due to some other reasons shut down other than maintenance, electrical, instrumental, utility, operational, planned, raw material, and raw water shut down in the plant ."
         },
         {
           "name": "Maintenance_Related_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is due to maintenance work."
         },
         {
           "name": "Electrical_Related_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is electrical work related."
         },
         {
           "name": "Instrument_Related_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is instrumental work related."
         },
         {
           "name": "Utility_Related_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is utility work related."
         },
         {
           "name": "Operational_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is operational shortage."
         },
         {
           "name": "Planned_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the shut down is planned."
         },
         {
           "name": "RM_Shortage_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is raw material shortage."
         },
         {
           "name": "Raw_water_Shortage_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is raw water shortage."
         },
         {
           "name": "Resources_Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "If the value is 1 in the column then it means that there was a shut down and the reason for the plant shut down is resources shortage."
         },
         {
           "name": "Running_Hours",
           "type": "double",
-          "description": ""
+          "description": "This column shows the total plant running hours for the entry."
         },
         {
           "name": "Shutdown_Hours",
           "type": "double",
-          "description": ""
+          "description": "This column shows the total plant shut down hours for the entry."
         }
       ]
     }
