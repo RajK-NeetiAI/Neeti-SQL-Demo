@@ -96,6 +96,7 @@ def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
             results += json.dumps(data, default=serialize_data)
     except Exception as e:
         print(e.args[0])
+        return ''
     else:
         pass
 
