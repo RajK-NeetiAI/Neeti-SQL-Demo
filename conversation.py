@@ -45,8 +45,12 @@ def handle_chat_completion(chat_history: list[list]) -> list[list]:
                 query, formated_chat_history)
             response = get_openai_response(chat_completion_prompt)
         else:
-            response = format_sql_response(sql_response)
-            response = response["choices"][0]['message']['content']
+            response = dict(format_sql_response(sql_response))
+            if "choices" in response.keys():
+                response = response["choices"][0]['message']['content']
+            else:
+                response = "I have a capacity to handle data, \
+at this point I can't answer your query becasue the data exceeds my capicity."
     else:
         response = assistant_message['content']
     print(f'Agent response -> {response}')
