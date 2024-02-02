@@ -1,3 +1,4 @@
+import tiktoken
 import os
 import json
 
@@ -39,8 +40,20 @@ def chat_completion_request(messages, tools=None, tool_choice=None, model=config
         return e
 
 
+encoding = tiktoken.encoding_for_model(config.GPT_MODEL)
+
+
+def num_tokens_from_sql_response(sql_response: str) -> int:
+    num_tokens = len(encoding.encode(sql_response))
+    return num_tokens
+
+
 @retry(wait=wait_random_exponential(multiplier=1, max=40), stop=stop_after_attempt(3))
 def format_sql_response(sql_response: str, model: str = config.GPT_MODEL) -> str:
+    num_tokens = num_tokens_from_sql_response(sql_response)
+    print(f'Number of tokens -> {num_tokens}')
+    if num_tokens > 128000:
+        return
     messages = get_format_sql_response_messages(sql_response)
     headers = {
         "Content-Type": "application/json",
