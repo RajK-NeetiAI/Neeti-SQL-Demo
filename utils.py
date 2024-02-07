@@ -1,13 +1,15 @@
 import decimal
 import json
 import datetime
+import os
 
 import mysql.connector
 
 import config
 
 cnx = mysql.connector.connect(user=config.MYSQL_USER, password=config.MYSQL_PASSWORD,
-                              host=config.MYSQL_HOST, port=config.MYSQL_PORT, database=config.MYSQL_DB_NAME)
+                              host=config.MYSQL_HOST, port=config.MYSQL_PORT, database=config.MYSQL_DB_NAME,
+                              pool_size=5, pool_reset_session=True)
 
 
 def get_table_names(cnx: mysql.connector.MySQLConnection) -> list[str]:
@@ -59,9 +61,13 @@ database_schema_string = "\n".join(
     ]
 )
 
-database_definitions = {}
-with open('data_definations.json', 'r') as file:
-    database_definitions = json.loads(file.read())
+database_definitions = {
+    "tables": []
+}
+
+for definition in os.listdir(config.DEFINITION_DIR):
+    with open(os.path.join(config.DEFINITION_DIR, definition), 'r') as file:
+        database_definitions['tables'].append(json.loads(file.read()))
 
 
 def format_number(amount):
