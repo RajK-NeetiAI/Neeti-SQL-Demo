@@ -4,6 +4,8 @@ from openai_api import chat_completion_request, format_sql_response
 from utils import database_schema_string, execute_function_call, database_definitions
 from prompts import get_sql_tool, get_chat_completion_prompt
 
+import config
+
 sql_tool = get_sql_tool(database_schema_string, database_definitions)
 
 
@@ -30,7 +32,7 @@ def handle_chat_completion(chat_history: list[list]) -> list[list]:
     print(f'User query -> {query}')
     formated_chat_history = format_chat_history(chat_history)
     chat_response = chat_completion_request(formated_chat_history, sql_tool)
-    if "choices" in response.keys():
+    if "choices" in chat_response.keys():
         assistant_message = chat_response["choices"][0]['message']
         if assistant_message['content'] == None:
             '''Call SQL and generate the response.
@@ -59,7 +61,7 @@ at this point I can't answer your query becasue the data exceeds my capicity."
 
         return chat_history
     else:
-        chat_history[-1][1] = response
+        chat_history[-1][1] = config.ERROR_MESSAGE
 
         return chat_history
 

@@ -37,7 +37,7 @@ def chat_completion_request(messages, tools=None, tool_choice=None, model=config
         print("Unable to generate ChatCompletion response")
         print(f"Exception: {e}")
 
-        return e
+        return {}
 
 
 encoding = tiktoken.encoding_for_model(config.GPT_MODEL)
