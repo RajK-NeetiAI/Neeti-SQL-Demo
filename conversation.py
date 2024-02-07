@@ -30,33 +30,38 @@ def handle_chat_completion(chat_history: list[list]) -> list[list]:
     print(f'User query -> {query}')
     formated_chat_history = format_chat_history(chat_history)
     chat_response = chat_completion_request(formated_chat_history, sql_tool)
-    assistant_message = chat_response["choices"][0]['message']
-    if assistant_message['content'] == None:
-        '''Call SQL and generate the response.
-        '''
-        if assistant_message["tool_calls"][0]["function"]["name"] == "ask_database":
-            sql_query = json.loads(
-                assistant_message["tool_calls"][0]["function"]["arguments"])["query"]
-            print(f'SQL query -> {sql_query}')
-            sql_response = execute_function_call(sql_query)
-            print(f'SQL response -> {sql_response}')
-        if sql_response == '':
-            chat_completion_prompt = get_chat_completion_prompt(
-                query, formated_chat_history)
-            response = get_openai_response(chat_completion_prompt)
-        else:
-            response = dict(format_sql_response(sql_response))
-            if "choices" in response.keys():
-                response = response["choices"][0]['message']['content']
+    if "choices" in response.keys():
+        assistant_message = chat_response["choices"][0]['message']
+        if assistant_message['content'] == None:
+            '''Call SQL and generate the response.
+            '''
+            if assistant_message["tool_calls"][0]["function"]["name"] == "ask_database":
+                sql_query = json.loads(
+                    assistant_message["tool_calls"][0]["function"]["arguments"])["query"]
+                print(f'SQL query -> {sql_query}')
+                sql_response = execute_function_call(sql_query)
+                print(f'SQL response -> {sql_response}')
+            if sql_response == '':
+                chat_completion_prompt = get_chat_completion_prompt(
+                    query, formated_chat_history)
+                response = get_openai_response(chat_completion_prompt)
             else:
-                response = "I have a capacity to handle data, \
+                response = dict(format_sql_response(sql_response))
+                if "choices" in response.keys():
+                    response = response["choices"][0]['message']['content']
+                else:
+                    response = "I have a capacity to handle data, \
 at this point I can't answer your query becasue the data exceeds my capicity."
-    else:
-        response = assistant_message['content']
-    print(f'Agent response -> {response}')
-    chat_history[-1][1] = response
+        else:
+            response = assistant_message['content']
+        print(f'Agent response -> {response}')
+        chat_history[-1][1] = response
 
-    return chat_history
+        return chat_history
+    else:
+        chat_history[-1][1] = response
+
+        return chat_history
 
 
 def handle_user_query(message: str, chat_history: list[tuple]) -> tuple:
