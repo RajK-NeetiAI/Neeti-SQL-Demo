@@ -18,3 +18,5 @@ DEFINITION_DIR = 'data_definition'
 for definition in os.listdir(DEFINITION_DIR):
     table_name = definition.rsplit('.', 1)[0]
     MYSQL_TABLES.append(table_name)
+
+ERROR_MESSAGE = 'We are facing an issue at this moment, please try after sometime.'
