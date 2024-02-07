@@ -1,4 +1,6 @@
 __pycache__/
 venv/
 .env
-BRS Production Report-3.csv
+csv_data/
+data_definition/
+
