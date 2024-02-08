@@ -3,17 +3,43 @@ import json
 import datetime
 import os
 
-import mysql.connector
+from mysql.connector.pooling import MySQLConnectionPool
+from mysql.connector import Error
 
 import config
 
-cnx = mysql.connector.connect(user=config.MYSQL_USER, password=config.MYSQL_PASSWORD,
-                              host=config.MYSQL_HOST, port=config.MYSQL_PORT, database=config.MYSQL_DB_NAME,
-                              pool_size=5, pool_reset_session=True)
+
+def connect_to_mysql_pool():
+    try:
+        connection_pool = MySQLConnectionPool(
+            pool_name="neeti-sql",
+            pool_size=5,
+            pool_reset_session=True,
+            host=config.MYSQL_HOST,
+            database=config.MYSQL_DB_NAME,
+            user=config.MYSQL_USER,
+            password=config.MYSQL_PASSWORD
+        )
+
+        return connection_pool
+    except Error as e:
+        print(f"Error creating MySQL connection pool: {e}")
+
+        return None
 
 
-def get_table_names(cnx: mysql.connector.MySQLConnection) -> list[str]:
+def close_mysql_pool(pool: MySQLConnectionPool):
+    if pool:
+        pool.close()
+        print("MySQL connection pool closed")
+
+
+def get_table_names() -> list[str]:
     """Return a list of table names."""
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return []
+    cnx = pool.get_connection()
     cursor = cnx.cursor()
     table_names = []
     cursor.execute(
@@ -26,8 +52,12 @@ def get_table_names(cnx: mysql.connector.MySQLConnection) -> list[str]:
     return table_names
 
 
-def get_column_names(cnx: mysql.connector.MySQLConnection, table_name: str) -> list[str]:
+def get_column_names(table_name: str) -> list[str]:
     """Return a list of column names."""
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return []
+    cnx = pool.get_connection()
     cursor = cnx.cursor()
     column_names = []
     cursor.execute(
@@ -39,12 +69,16 @@ def get_column_names(cnx: mysql.connector.MySQLConnection, table_name: str) -> l
     return column_names
 
 
-def get_database_info(cnx: mysql.connector.MySQLConnection) -> dict:
+def get_database_info() -> dict:
     """Return a list of dicts containing the table name and columns for each table in the database."""
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return {}
+    cnx = pool.get_connection()
     cursor = cnx.cursor()
     table_dicts = []
-    for table_name in get_table_names(cnx):
-        columns_names = get_column_names(cnx, table_name)
+    for table_name in get_table_names():
+        columns_names = get_column_names(table_name)
         table_dicts.append(
             {"table_name": table_name, "column_names": columns_names})
     cursor.close()
@@ -52,22 +86,35 @@ def get_database_info(cnx: mysql.connector.MySQLConnection) -> dict:
     return table_dicts
 
 
-database_schema_dict = get_database_info(cnx)
+def get_database_schema_string():
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return ''
+    cnx = pool.get_connection()
+    database_schema_dict = get_database_info()
+    database_schema_string = "\n".join(
+        [
+            f"Table: {table['table_name']}\nColumns: {', '.join(table['column_names'])}"
+            for table in database_schema_dict
+        ]
+    )
 
-database_schema_string = "\n".join(
-    [
-        f"Table: {table['table_name']}\nColumns: {', '.join(table['column_names'])}"
-        for table in database_schema_dict
-    ]
-)
+    return database_schema_string
 
-database_definitions = {
-    "tables": []
-}
 
-for definition in os.listdir(config.DEFINITION_DIR):
-    with open(os.path.join(config.DEFINITION_DIR, definition), 'r') as file:
-        database_definitions['tables'].append(json.loads(file.read()))
+def get_database_definitions():
+    database_definitions = {
+        "tables": []
+    }
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return database_definitions
+    cnx = pool.get_connection()
+    for definition in os.listdir(config.DEFINITION_DIR):
+        with open(os.path.join(config.DEFINITION_DIR, definition), 'r') as file:
+            database_definitions['tables'].append(json.loads(file.read()))
+
+    return database_definitions
 
 
 def format_number(amount):
@@ -91,8 +138,12 @@ def serialize_data(obj) -> str:
     raise TypeError(f"Object type not serializable - {type(obj)}")
 
 
-def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
+def ask_database(query: str):
     """Function to query SQLite database with a provided SQL query."""
+    pool = connect_to_mysql_pool()
+    if not pool:
+        return ''
+    cnx = pool.get_connection()
     try:
         cursor = cnx.cursor(dictionary=True)
         cursor.execute(query)
@@ -109,7 +160,7 @@ def ask_database(cnx: mysql.connector.MySQLConnection, query: str):
 
 
 def execute_function_call(query: str) -> str:
-    results = ask_database(cnx, query)
+    results = ask_database(query)
     print(results)
 
     return results
