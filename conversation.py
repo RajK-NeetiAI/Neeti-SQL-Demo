@@ -1,12 +1,13 @@
 import json
 
 from openai_api import chat_completion_request, format_sql_response
-from utils import database_schema_string, execute_function_call, database_definitions
+from utils import get_database_schema_string, execute_function_call, get_database_definitions
 from prompts import get_sql_tool, get_chat_completion_prompt
 
 import config
 
-sql_tool = get_sql_tool(database_schema_string, database_definitions)
+sql_tool = get_sql_tool(get_database_schema_string(),
+                        get_database_definitions())
 
 
 def format_chat_history(chat_history: list[list]) -> list[list]:
